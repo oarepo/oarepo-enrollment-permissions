@@ -118,7 +118,7 @@ def no_access_user(db):
 def record_user(db, sample_records, granting_user):
     user = create_user(db, 'record@example.com')
 
-    enrollment = Enrollment.create('record', f'recid:{sample_records["A"][0].pid.pid_value}', user.email, granting_user,
+    enrollment = Enrollment.create('record', str(sample_records["A"][0].pid.object_uuid), user.email, granting_user,
                                    extra_data={
                                        'operations': 'read'
                                    })
@@ -126,7 +126,7 @@ def record_user(db, sample_records, granting_user):
     enrollment.enrolled_user = user
     db.session.add(enrollment)
 
-    enrollment = Enrollment.create('record', f'recid:{sample_records["B"][0].pid.pid_value}', user.email, granting_user,
+    enrollment = Enrollment.create('record', str(sample_records["B"][0].pid.object_uuid), user.email, granting_user,
                                    extra_data={
                                        'operations': 'read'
                                    })
