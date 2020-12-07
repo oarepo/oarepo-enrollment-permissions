@@ -3,7 +3,7 @@ from flask_login import current_user
 from invenio_records_rest.utils import allow_all, deny_all
 
 from oarepo_enrollment_permissions import RecordsSearch
-from oarepo_enrollment_permissions.permission_factories import read_permission_factory
+from oarepo_enrollment_permissions.permissions import read_permission_factory
 
 
 class CustomAnonymousRecordsSearch(RecordsSearch):

@@ -55,4 +55,4 @@ class RecordPermission:
         self.record = record
 
     def can(self):
-        return self.queryset.filter(Enrollment.external_key == str(self.record.id)).count() > 0
+        return self.record and self.queryset.filter(Enrollment.external_key == str(self.record.id)).count() > 0

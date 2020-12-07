@@ -47,16 +47,16 @@ class CollectionHandler(EnrollmentHandler):
         return collections
 
     @classmethod
-    def get_permission(cls, queryset, record=None, **kwargs):
+    def get_permission(cls, queryset, record=None, data=None, **kwargs):
         allowed_collections = cls.get_collections(queryset)
         path = cls.collection_filter
         if callable(path):
             handler = current_app.config['OAREPO_ENROLLMENT_PERMISSIONS_COLLECTION_PERMISSION_HANDLER']
             if not handler:
                 raise NotImplementedError('Please supply OAREPO_ENROLLMENT_PERMISSIONS_COLLECTION_PERMISSION_HANDLER')
-            return handler(allowed_collections=allowed_collections, record=record, **kwargs)
+            return handler(allowed_collections=allowed_collections, record=record, data=data, **kwargs)
         path = convert_path_to_jsonpointer(path)
-        collections = resolve_pointer(record, path)
+        collections = resolve_pointer(record or data or {}, path)
         return CollectionPermission(collections, allowed_collections)
 
     def post_filter_elasticsearch_result(self, search=None, result=None, **kwargs):

@@ -9,8 +9,8 @@ from invenio_search import current_search
 from oarepo_enrollments.models import Enrollment
 
 from oarepo_enrollment_permissions import RecordsSearch
-from oarepo_enrollment_permissions.permission_factories import create_permission_factory, delete_permission_factory, \
-    update_permission_factory, read_permission_factory
+from oarepo_enrollment_permissions.permissions import read_permission_factory, update_permission_factory, \
+    delete_permission_factory, create_permission_factory
 from .helpers import test_login, make_sample_record
 from .search import CustomAnonymousRecordsSearch, CustomAnonymousRecordsCallableSearch, RecordsSecuritySearch, \
     anonymous_get_read_permission_factory
@@ -136,6 +136,22 @@ def record_user(db, sample_records, granting_user):
 
     enrollment = Enrollment.create('record', str(sample_records["B"][0].pid.object_uuid), user.email, granting_user,
                                    actions=['read'])
+    enrollment.state = Enrollment.SUCCESS
+    enrollment.enrolled_user = user
+    db.session.add(enrollment)
+
+    db.session.commit()
+
+    return user
+
+
+@pytest.fixture
+def record_creating_user(db, sample_records, granting_user):
+    user = create_user(db, 'creating@example.com')
+
+    enrollment = Enrollment.create('collection', "A",
+                                   user.email, granting_user,
+                                   actions=['create'])
     enrollment.state = Enrollment.SUCCESS
     enrollment.enrolled_user = user
     db.session.add(enrollment)

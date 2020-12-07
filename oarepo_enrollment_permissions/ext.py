@@ -1,3 +1,4 @@
+from flask import request
 from flask_principal import Permission
 from invenio_records_rest.utils import deny_all
 from oarepo_enrollments.proxies import current_enrollments

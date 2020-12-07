@@ -44,13 +44,13 @@ pip install oarepo-enrollment-permissions
    from ``oarepo_enrollment_permissions.RecordsSearchMixin``.
 2. If your ``read_permission_factory_imp`` is not ``check_elasticsearch``, be sure to include the result
    of ``oarepo_enrollment_permissions.read_permission_factory``
-   in your permission factory.
+   in your permission factory - see below for details).
 3. Use ``oarepo_enrollment_permissions.update_permission_factory`` as your update permission factory (or call if from
-   your own permission factory)
+   your own permission factory - see below for details).
 4. Use ``oarepo_enrollment_permissions.delete_permission_factory`` as your delete permission factory (or call if from
-   your own permission factory)
+   your own permission factory - see below for details).
 5. Use ``oarepo_enrollment_permissions.create_permission_factory`` as your create permission factory (or call if from
-   your own permission factory)
+   your own permission factory - see below for details).
 
 Now you are all set, no one has an access until granted.
 
