@@ -162,6 +162,29 @@ def record_creating_user(db, sample_records, granting_user):
 
 
 @pytest.fixture
+def record_updating_user(db, sample_records, granting_user):
+    user = create_user(db, 'updating@example.com')
+
+    enrollment = Enrollment.create('collection', "A",
+                                   user.email, granting_user,
+                                   actions=['update'])
+    enrollment.state = Enrollment.SUCCESS
+    enrollment.enrolled_user = user
+    db.session.add(enrollment)
+
+    enrollment = Enrollment.create('record', str(sample_records["B"][0].pid.object_uuid),
+                                   user.email, granting_user,
+                                   actions=['update'])
+    enrollment.state = Enrollment.SUCCESS
+    enrollment.enrolled_user = user
+    db.session.add(enrollment)
+
+    db.session.commit()
+
+    return user
+
+
+@pytest.fixture
 def collection_enrollment(db, granting_user, enrolled_user):
     enrollment = Enrollment.create('collection', 'B', enrolled_user.email, granting_user,
                                    actions=['read'])
