@@ -1,17 +1,12 @@
-from collections import defaultdict
-
 from elasticsearch_dsl import FacetedResponse as ESFacetedResponse, FacetedSearch, Q
-from flask import current_app
+from elasticsearch_dsl.query import Bool
+from elasticsearch_dsl.response import Response as ESResponse
 from flask_login import current_user
 from invenio_search import RecordsSearch as InvenioRecordsSearch
-from elasticsearch_dsl.response import Response as ESResponse
-from elasticsearch_dsl.query import Bool
 from invenio_search.api import MinShouldMatch
 from invenio_search.utils import build_alias_name
 
 from oarepo_enrollment_permissions.proxies import current_enrollment_permissions
-from oarepo_enrollments.models import Enrollment
-from oarepo_enrollments.proxies import current_enrollments
 
 
 class Response(ESResponse):

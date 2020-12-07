@@ -29,10 +29,7 @@ class CollectionHandler(EnrollmentHandler):
         collections = []
         for enrollment in queryset:
             collection = enrollment.external_key
-            operations = enrollment.extra_data.get('operations')
-            if not collection or not operations:
-                continue
-            if 'read' not in operations:
+            if not collection:
                 continue
             collections.append(collection)
 

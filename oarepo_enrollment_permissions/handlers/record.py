@@ -29,10 +29,7 @@ class RecordHandler(EnrollmentHandler):
         records = []
         for enrollment in queryset:
             record = enrollment.external_key
-            operations = enrollment.extra_data.get('operations')
-            if not record or not operations:
-                continue
-            if 'read' not in operations:
+            if not record:
                 continue
             records.append(record)
 

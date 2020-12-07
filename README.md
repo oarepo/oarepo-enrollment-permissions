@@ -66,7 +66,7 @@ pointer (specified in configuration or passed to the enroll call).
 To grant access to a collection on command-line, call:
 
 ```bash
-invenio oarepo:enroll collection <email> <collection key> operations=read,update,delete,create
+invenio oarepo:enroll collection <email> <collection key> actions=read,update,delete,create
 ```
 
 If you want to perform the same in REST API, call:
@@ -86,7 +86,7 @@ If you want to perform the same in REST API, call:
 You can grant rights to a single record as well. To do that, invoke:
 
 ```bash
-invenio oarepo:enroll record <email> <record_uuid> operations=read,update,delete
+invenio oarepo:enroll record <email> <record_uuid> actions=read,update,delete
 ```
 
 Again, the same can be achieved via API:

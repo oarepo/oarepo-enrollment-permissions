@@ -119,17 +119,13 @@ def record_user(db, sample_records, granting_user):
     user = create_user(db, 'record@example.com')
 
     enrollment = Enrollment.create('record', str(sample_records["A"][0].pid.object_uuid), user.email, granting_user,
-                                   extra_data={
-                                       'operations': 'read'
-                                   })
+                                   actions=['read'])
     enrollment.state = Enrollment.SUCCESS
     enrollment.enrolled_user = user
     db.session.add(enrollment)
 
     enrollment = Enrollment.create('record', str(sample_records["B"][0].pid.object_uuid), user.email, granting_user,
-                                   extra_data={
-                                       'operations': 'read'
-                                   })
+                                   actions=['read'])
     enrollment.state = Enrollment.SUCCESS
     enrollment.enrolled_user = user
     db.session.add(enrollment)
@@ -142,9 +138,7 @@ def record_user(db, sample_records, granting_user):
 @pytest.fixture
 def collection_enrollment(db, granting_user, enrolled_user):
     enrollment = Enrollment.create('collection', 'B', enrolled_user.email, granting_user,
-                                   extra_data={
-                                       'operations': 'read'
-                                   })
+                                   actions=['read'])
     enrollment.state = Enrollment.SUCCESS
     enrollment.enrolled_user = enrolled_user
     db.session.add(enrollment)

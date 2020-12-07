@@ -20,10 +20,11 @@ class OARepoEnrollmentPermissionsState:
     def permission_enrollment_types(self):
         return self.permission_handlers.keys()
 
-    def get_user_elasticsearch_filters(self, search, user):
+    def get_user_elasticsearch_filters(self, search, user, action='read'):
         enrollments = Enrollment.query.filter(
             Enrollment.enrolled_user == user,
-            Enrollment.state == Enrollment.SUCCESS
+            Enrollment.state == Enrollment.SUCCESS,
+            Enrollment.actions.any(action)
         )
         ret = []
         for enrollment_type, handler in self.permission_handlers.items():
