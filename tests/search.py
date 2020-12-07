@@ -1,6 +1,9 @@
 from elasticsearch_dsl import Q
+from flask_login import current_user
+from invenio_records_rest.utils import allow_all, deny_all
 
 from oarepo_enrollment_permissions import RecordsSearch
+from oarepo_enrollment_permissions.permission_factories import read_permission_factory
 
 
 class CustomAnonymousRecordsSearch(RecordsSearch):
@@ -18,3 +21,12 @@ class CustomAnonymousRecordsCallableSearch(RecordsSearch):
 
 class RecordsSecuritySearch(RecordsSearch):
     pass
+
+
+def anonymous_get_read_permission_factory(*args, **kwargs):
+    if current_user.is_anonymous:
+        if kwargs['record']['collection'] == 'A':
+            return allow_all()
+        else:
+            return deny_all()
+    return read_permission_factory(*args, **kwargs)

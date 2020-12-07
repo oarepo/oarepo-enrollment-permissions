@@ -1,7 +1,7 @@
 from elasticsearch_dsl import Q
 from flask import current_app
 from invenio_accounts.models import User
-from oarepo_enrollments import EnrollmentHandler
+from oarepo_enrollments import EnrollmentHandler, Enrollment
 from sqlalchemy.util import classproperty
 
 
@@ -40,6 +40,19 @@ class RecordHandler(EnrollmentHandler):
             return Q('terms', **{es_filter: records})
         return None
 
+    @classmethod
+    def get_permission(cls, queryset, record=None, **kwargs):
+        return RecordPermission(queryset, record)
+
     def post_filter_elasticsearch_result(self, search=None, result=None, **kwargs):
         # can be used to hide metadata from results
         pass
+
+
+class RecordPermission:
+    def __init__(self, queryset, record):
+        self.queryset = queryset
+        self.record = record
+
+    def can(self):
+        return self.queryset.filter(Enrollment.external_key == str(self.record.id)).count() > 0

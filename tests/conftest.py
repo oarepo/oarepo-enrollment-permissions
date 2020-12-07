@@ -9,8 +9,11 @@ from invenio_search import current_search
 from oarepo_enrollments.models import Enrollment
 
 from oarepo_enrollment_permissions import RecordsSearch
+from oarepo_enrollment_permissions.permission_factories import create_permission_factory, delete_permission_factory, \
+    update_permission_factory, read_permission_factory
 from .helpers import test_login, make_sample_record
-from .search import CustomAnonymousRecordsSearch, CustomAnonymousRecordsCallableSearch, RecordsSecuritySearch
+from .search import CustomAnonymousRecordsSearch, CustomAnonymousRecordsCallableSearch, RecordsSecuritySearch, \
+    anonymous_get_read_permission_factory
 
 import logging
 
@@ -31,7 +34,7 @@ def api(app):
         yield current_api
 
 
-def gen_rest_endpoint(search_class, path):
+def gen_rest_endpoint(search_class, path, custom_read_permission_factory=None):
     return dict(
         pid_type='recid',
         pid_minter='recid',
@@ -53,6 +56,10 @@ def gen_rest_endpoint(search_class, path):
         default_media_type='application/json',
         max_result_window=10000,
         error_handlers=dict(),
+        create_permission_factory_imp=create_permission_factory,
+        delete_permission_factory_imp=delete_permission_factory,
+        update_permission_factory_imp=update_permission_factory,
+        read_permission_factory_imp=custom_read_permission_factory or read_permission_factory,
     )
 
 
@@ -81,8 +88,11 @@ def app_config(app_config):
         },
         RECORDS_REST_ENDPOINTS={
             'recid': gen_rest_endpoint(RecordsSearch, 'records-no-security'),
-            'recid1': gen_rest_endpoint(RecordsSecuritySearch, 'records-security'),
-            'recid2': gen_rest_endpoint(CustomAnonymousRecordsSearch, 'records-anonymous-custom'),
+            'recid1': gen_rest_endpoint(
+                RecordsSecuritySearch, 'records-security'),
+            'recid2': gen_rest_endpoint(
+                CustomAnonymousRecordsSearch, 'records-anonymous-custom',
+                custom_read_permission_factory=anonymous_get_read_permission_factory),
             'recid3': gen_rest_endpoint(CustomAnonymousRecordsCallableSearch, 'records-anonymous-custom-callable'),
         },
         INDEXER_RECORD_TO_INDEX='tests.helpers:record_to_index'
@@ -164,7 +174,11 @@ def login(api):
     blue.add_url_rule('_login/<user_id>', view_func=test_login)
 
     api.register_blueprint(blue)
-    return blue
+
+    def do_login(api_client, user_id):
+        assert api_client.get(f'_tests/_login/{user_id}').status_code == 200
+
+    return do_login
 
 
 @pytest.fixture()
