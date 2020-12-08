@@ -17,8 +17,7 @@ OAREPO_VERSION = os.environ.get('OAREPO_VERSION', '3.3')
 
 install_requires = [
     'wrapt>=1.11.2',
-    # 'flask-rest-paginate',
-    # 'oarepo-enrollment'
+    'oarepo-enrollments'
 ]
 
 tests_require = [
