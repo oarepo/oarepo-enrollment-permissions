@@ -11,6 +11,10 @@ exclude *.yml
 exclude run-tests.sh
 include *.rst
 include *.md
+exclude .dockerignore
+exclude .editorconfig
+exclude make_toc.sh
+
 
 recursive-include oarepo_enrollment_permissions *.py
-recursive-exclude tests
+recursive-exclude tests *
