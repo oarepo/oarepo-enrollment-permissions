@@ -56,7 +56,10 @@ class CollectionHandler(EnrollmentHandler):
                 raise NotImplementedError('Please supply OAREPO_ENROLLMENT_PERMISSIONS_COLLECTION_PERMISSION_HANDLER')
             return handler(allowed_collections=allowed_collections, record=record, data=data, **kwargs)
         path = convert_path_to_jsonpointer(path)
-        collections = resolve_pointer(record or data or {}, path)
+        try:
+            collections = resolve_pointer(record or data or {}, path)
+        except:
+            collections = []
         return CollectionPermission(collections, allowed_collections)
 
     def post_filter_elasticsearch_result(self, search=None, result=None, **kwargs):
